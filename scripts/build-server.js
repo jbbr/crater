@@ -1,5 +1,4 @@
 #!/usr/bin/env babel-node
-// @flow
 
 import path from 'path'
 import mkdirp from 'mkdirp'
@@ -16,7 +15,7 @@ const prerender = path.join(buildDir, 'prerender.js')
 
 const opts = {cwd: root, stdio: 'inherit'}
 
-async function buildServer(): Promise<void> {
+async function buildServer() {
   await promisify(mkdirp)(buildDir)
   await spawnAsync('babel', [path.join(root, 'src', 'index.js'), '-o', path.join(buildDir, 'index.js')], opts)
   if (await isNewerThan(path.join(root, 'webpack', 'webpack.config.server.js'), prerender) ||
@@ -40,6 +39,6 @@ async function buildServer(): Promise<void> {
 export default buildServer
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(1))
+  process.on('SIGINT', () => process.exit(1))
   asyncScript(buildServer)
 }

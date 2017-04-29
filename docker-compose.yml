@@ -4,7 +4,7 @@ services:
     image: mongo:3.2.8
     restart: always
     ports:
-      - "27017"
+      - "27017:27017"
   crater:
     image: jedwards1211/$NAME:$TAG
     ports:

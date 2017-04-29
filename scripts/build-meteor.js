@@ -1,5 +1,4 @@
 #!/usr/bin/env babel-node
-// @flow
 
 import path from 'path'
 import glob from 'glob'

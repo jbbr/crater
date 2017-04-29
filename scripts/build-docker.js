@@ -1,5 +1,4 @@
 #!/usr/bin/env babel-node
-// @flow
 
 import asyncScript from 'crater-util/lib/asyncScript'
 import execAsync from 'crater-util/lib/execAsync'
@@ -10,14 +9,14 @@ import buildDir from '../buildDir'
 
 const root = path.resolve(__dirname, '..')
 
-process.on('SIGINT', (): any => process.exit(1))
+process.on('SIGINT', () => process.exit(1))
 
 const opts = {
   cwd: root,
   stdio: 'inherit'
 }
 
-asyncScript(async (): Promise<void> => {
+asyncScript(async () => {
   await build()
   const commitHash = (await execAsync('git rev-parse HEAD', {silent: true})).stdout.trim()
   const {TARGET} = process.env

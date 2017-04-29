@@ -1,5 +1,3 @@
-// @flow
-
 import path from 'path'
 import webpack from 'webpack'
 import AssetsPlugin from 'assets-webpack-plugin'
@@ -67,7 +65,7 @@ const config = {
       loaders: [{
         path: 'babel-loader',
         options: {
-          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
+          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
           "plugins": [
             "transform-runtime",
           ],

@@ -1,5 +1,4 @@
 #!/usr/bin/env babel-node
-// @flow
 
 import path from 'path'
 import asyncScript from 'crater-util/lib/asyncScript'
@@ -12,7 +11,7 @@ import buildDir from '../buildDir'
 const root = path.resolve(__dirname, '..')
 const assets = path.join(buildDir, 'assets.json')
 
-async function buildClient(): Promise<void> {
+async function buildClient() {
   if (await isNewerThan(path.join(root, 'webpack', 'webpack.config.prod.js'), assets) ||
       await isNewerThan(path.join(root, 'src'), assets)) {
     console.log('building client bundle...')
@@ -34,6 +33,6 @@ async function buildClient(): Promise<void> {
 export default buildClient
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(1))
+  process.on('SIGINT', () => process.exit(1))
   asyncScript(buildClient)
 }

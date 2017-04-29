@@ -1,5 +1,4 @@
 #!/usr/bin/env babel-node
-// @flow
 
 import spawnAsync from 'crater-util/lib/spawnAsync'
 import isDirectory from 'crater-util/lib/isDirectory'
@@ -8,7 +7,7 @@ import buildDir from '../buildDir'
 
 const programsServer = path.join(buildDir, 'meteor', 'bundle', 'programs', 'server')
 
-async function installMeteorDeps(): Promise<any> {
+async function installMeteorDeps() {
   if (!(await isDirectory(path.join(programsServer, 'node_modules')))) {
     console.log('installing Meteor npm dependencies...')
     await spawnAsync('npm', ['install'], {

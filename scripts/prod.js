@@ -1,5 +1,4 @@
 #!/usr/bin/env babel-node
-// @flow
 
 import launch from 'smart-restart'
 import asyncScript from 'crater-util/lib/asyncScript'
@@ -17,7 +16,7 @@ const root = path.resolve(__dirname, '..')
 process.env.NODE_ENV = 'production'
 process.env.USE_DOTENV = '1'
 
-async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<any> {
+async function prod(options = {}) {
   await buildMeteor()
   await installMeteorDeps()
   await spawnAsync('babel', [path.join(root, 'src', 'index.js'), '-o', path.join(buildDir, 'index.js')], {
@@ -25,8 +24,8 @@ async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<an
     stdio: 'inherit',
   })
 
-  function launchWebpack(config: Object): Promise<void> {
-    return new Promise((_resolve: Function) => {
+  function launchWebpack(config) {
+    return new Promise((_resolve) => {
       let resolved = false
       function resolve() {
         if (!resolved) {
@@ -35,7 +34,7 @@ async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<an
         }
       }
       const compiler = webpack(config)
-      compiler.watch({}, (err: ?Error, stats: Object) => {
+      compiler.watch({}, (err, stats) => {
         if (err) {
           console.error(err.stack)
           return
@@ -64,8 +63,8 @@ async function prod(options?: {commandOptions?: Array<string>} = {}): Promise<an
 export default prod
 
 if (!module.parent) {
-  process.on('SIGINT', (): any => process.exit(0))
-  process.on('SIGTERM', (): any => process.exit(0))
+  process.on('SIGINT', () => process.exit(0))
+  process.on('SIGTERM', () => process.exit(0))
   asyncScript(prod, {
     exitOnSuccess: false,
   })

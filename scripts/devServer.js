@@ -1,5 +1,3 @@
-// @flow
-
 import express from 'express'
 import webpackConfig from '../webpack/webpack.config.dev'
 import createDebug from 'debug'
@@ -18,15 +16,15 @@ app.use(require('webpack-dev-middleware')(compiler, webpackConfig.devServer || {
 app.use(require('webpack-hot-middleware')(compiler))
 
 const proxy = require('http-proxy').createProxyServer()
-proxy.on('error', (err: Error): any => console.error(err.stack))
+proxy.on('error', (err) => console.error(err.stack))
 
 const target = `http://localhost:${PORT}`
 
-app.all('*', (req: Object, res: Object): any => proxy.web(req, res, { target }))
+app.all('*', (req, res) => proxy.web(req, res, { target }))
 
 const server = app.listen(webpackConfig.devServer.port)
 
-server.on('upgrade', (req: Object, socket: any, head: any): any => proxy.ws(req, socket, head, { target }))
+server.on('upgrade', (req, socket, head) => proxy.ws(req, socket, head, { target }))
 
 console.log(`Dev server is listening on http://0.0.0.0:${webpackConfig.devServer.port}`)
 

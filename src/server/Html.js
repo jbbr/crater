@@ -1,4 +1,3 @@
-/* @flow */
 /* eslint react/no-danger:0 */
 import React, {Component, PropTypes} from 'react'
 import {Provider} from 'react-redux'
@@ -17,7 +16,7 @@ export default class Html extends Component {
     renderProps: PropTypes.object,
   }
 
-  render(): React.Element<any> {
+  render() {
     const PROD = process.env.NODE_ENV === 'production'
     const {title, __meteor_runtime_config__, store, assets, renderProps} = this.props
     const {manifest, app, vendor, meteor} = assets || {}

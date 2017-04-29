@@ -1,5 +1,3 @@
-// @flow
-
 import path from 'path'
 import webpack from 'webpack'
 import HappyPack from 'happypack'
@@ -23,7 +21,7 @@ const meteorConfig = {
 
 const config = {
   context: root,
-  devtool: 'eval',
+  devtool: 'eval-source-map',
   entry: [
     './src/client/index.js',
     'react-hot-loader/patch',
@@ -53,7 +51,8 @@ const config = {
       loaders: [{
         path: 'babel-loader',
         options: {
-          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react", "flow"],
+          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
+          "sourceMap": "inline",
           "plugins": [
             "transform-runtime",
             "react-hot-loader/babel",
