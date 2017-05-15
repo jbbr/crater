@@ -1,7 +1,7 @@
 import path from 'path'
 import webpack from 'webpack'
+import {CheckerPlugin} from 'awesome-typescript-loader'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
-import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
 import buildDir from '../buildDir'
@@ -15,6 +15,9 @@ const config = {
   devtool: 'source-map',
   entry: {
     prerender: './src/server',
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
   },
   target: 'node',
   node: {
@@ -54,29 +57,9 @@ const config = {
       'process.env.TARGET': JSON.stringify(process.env.TARGET),
       'process.env.NODE_ENV': JSON.stringify('production'),
       // uncomment this line to hard-disable full SSR
-      // 'process.env.DISABLE_FULL_SSR': JSON.stringify('1'),
+      'process.env.DISABLE_FULL_SSR': JSON.stringify('1'),
     }),
-    new HappyPack({
-      cache: false,
-      loaders: [{
-        path: 'babel-loader',
-        options: {
-          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
-          "plugins": [
-            "transform-runtime",
-            "meteor-imports"
-          ],
-          "env": {
-            "coverage": {
-              "plugins": [
-                "istanbul"
-              ]
-            }
-          }
-        }
-      }],
-      threads: 4,
-    }),
+    new CheckerPlugin(),
   ],
   module: {
     loaders: [
@@ -113,8 +96,49 @@ const config = {
       },
       {
         test: /\.js$/,
-        loader: 'happypack/loader',
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
+            "plugins": [
+              "transform-runtime",
+              "meteor-imports"
+            ],
+            "env": {
+              "coverage": {
+                "plugins": [
+                  "istanbul"
+                ]
+              }
+            }
+          }
+        }],
         include: srcDir,
+      },
+      {
+        test: /\.tsx?$/,
+        use: [{
+          loader: 'awesome-typescript-loader',
+          options: {
+            "useCache": true,
+            "useBabel": true,
+            "babelOptions": {
+              "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
+              "sourceMap": "inline",
+              "plugins": [
+                "transform-runtime",
+                "meteor-imports",
+              ],
+              "env": {
+                "coverage": {
+                  "plugins": [
+                    "istanbul"
+                  ]
+                }
+              }
+            }
+          },
+        }]
       },
     ],
   },

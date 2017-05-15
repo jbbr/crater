@@ -1,11 +1,10 @@
-/* eslint react/no-danger:0 */
 import React, {Component, PropTypes} from 'react'
 import {Provider} from 'react-redux'
 import {RouterContext} from 'react-router'
 import {renderToString} from 'react-dom-stream/server'
 
 // Injects the server rendered state and app into a basic html template
-export default class Html extends Component {
+export default class Html extends Component<any, {}> {
   static propTypes = {
     __meteor_runtime_config__: PropTypes.object.isRequired,
     store: PropTypes.object.isRequired,
@@ -19,7 +18,7 @@ export default class Html extends Component {
   render() {
     const PROD = process.env.NODE_ENV === 'production'
     const {title, __meteor_runtime_config__, store, assets, renderProps} = this.props
-    const {manifest, app, vendor, meteor} = assets || {}
+    const {manifest, app, vendor, meteor} = assets || {} as any
     const initialState = `window.__INITIAL_STATE__ = ${JSON.stringify(store.getState())}`
     const root = PROD && !process.env.DISABLE_FULL_SSR && renderToString(
       <Provider store={store}>

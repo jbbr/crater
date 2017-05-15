@@ -1,4 +1,5 @@
 .happypack
+.awcache
 node_modules
 build
 errorShots

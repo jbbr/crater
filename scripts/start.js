@@ -1,6 +1,7 @@
 #!/usr/bin/env babel-node
 
 import asyncScript from 'crater-util/lib/asyncScript'
+import spawnAsync from 'crater-util/lib/spawnAsync'
 import path from 'path'
 import buildMeteor from './build-meteor'
 import installMeteorDeps from './installMeteorDeps'
@@ -17,6 +18,10 @@ async function start(options = {}) {
     await buildMeteor()
     await installMeteorDeps()
   }
+  spawnAsync('./node_modules/.bin/tsc', ['-p', 'tsconfig.server.json', '--watch'], {
+    cwd: root,
+    stdio: 'inherit',
+  })
   require('./devServer')
   launch({
     commandOptions: options.commandOptions || [],

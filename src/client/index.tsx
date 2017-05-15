@@ -9,8 +9,10 @@ import Root from './Root'
 
 if (process.env.NODE_ENV !== 'production') require('es6-promise').polyfill()
 
+console.log('LOAD index.tsx', React)
+
 Meteor.startup(() => {
-  const { router } = window.__INITIAL_STATE__
+  const { router } = window['__INITIAL_STATE__']
 
   // routing is currently a regualr JS object. This may change in the future
   const initialState = iMap({
@@ -28,8 +30,8 @@ Meteor.startup(() => {
   let reloads = 0
 
   // Hot Module Replacement API
-  if (module.hot) {
-    module.hot.accept('./Root', () => {
+  if (module['hot']) {
+    module['hot'].accept('./Root', () => {
       const Root = require('./Root').default
       render(
         <AppContainer key={++reloads}>

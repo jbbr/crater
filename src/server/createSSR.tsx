@@ -12,8 +12,6 @@ import promisify from 'es6-promisify'
 import {Map as iMap} from 'immutable'
 import {Meteor} from 'meteor/meteor'
 import url from 'url'
-import type {IncomingMessage, ServerResponse} from 'http'
-import type {Store} from '../universal/flowtypes/redux'
 
 const __meteor_runtime_config__ = {
   PUBLIC_SETTINGS: Meteor.settings.public || {},
@@ -27,7 +25,7 @@ const __meteor_runtime_config__ = {
   meteorRelease: Meteor.release,
 }
 
-function renderApp(res: ServerResponse, store: Store, assets?: Object, renderProps?: Object) {
+function renderApp(res, store, assets?, renderProps?) {
   const location = renderProps && renderProps.location && renderProps.location.pathname || '/'
   // Needed so some components can render based on location
   store.dispatch(push(location))
@@ -45,7 +43,7 @@ function renderApp(res: ServerResponse, store: Store, assets?: Object, renderPro
   htmlStream.on('end', (): void => res.end())
 }
 
-async function createSSR(req: IncomingMessage, res: ServerResponse): Promise<void> {
+async function createSSR(req, res) {
   try {
     const store = createStore(makeReducer(), iMap())
     if (process.env.NODE_ENV === 'production') {
@@ -58,7 +56,7 @@ async function createSSR(req: IncomingMessage, res: ServerResponse): Promise<voi
       }
       const makeRoutes = require('../universal/routes').default
       const routes = makeRoutes(store)
-      match({routes, location: req.url}, (error: ?Error, redirectLocation: {pathname: string, search: string}, renderProps: ?Object) => {
+      match({routes, location: req.url}, (error, redirectLocation, renderProps) => {
         if (error) {
           res.status(500).send(error.message)
         } else if (redirectLocation) {

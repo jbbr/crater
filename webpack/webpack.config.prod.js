@@ -1,7 +1,7 @@
 import path from 'path'
 import webpack from 'webpack'
+import {CheckerPlugin} from 'awesome-typescript-loader'
 import AssetsPlugin from 'assets-webpack-plugin'
-import HappyPack from 'happypack'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
@@ -27,9 +27,12 @@ const config = {
   context: root,
   devtool: 'source-map',
   entry: {
-    app: './src/client/index.js',
+    app: './src/client/index.tsx',
     vendor,
     meteor: ['meteor-imports'],
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
   },
   output: {
     filename: '[name]_[chunkhash].js',
@@ -60,26 +63,6 @@ const config = {
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
     new webpack.IgnorePlugin(/\/server\//),
-    new HappyPack({
-      cache: false,
-      loaders: [{
-        path: 'babel-loader',
-        options: {
-          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
-          "plugins": [
-            "transform-runtime",
-          ],
-          "env": {
-            "coverage": {
-              "plugins": [
-                "istanbul"
-              ]
-            }
-          }
-        }
-      }],
-      threads: 4,
-    }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       options: {
@@ -87,7 +70,7 @@ const config = {
       }
     }),
     new MeteorImportsPlugin(meteorConfig),
-
+    new CheckerPlugin(),
   ],
   module: {
     rules: [
@@ -125,7 +108,46 @@ const config = {
       },
       {
         test: /\.js$/,
-        loader: 'happypack/loader',
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
+            "plugins": [
+              "transform-runtime",
+            ],
+            "env": {
+              "coverage": {
+                "plugins": [
+                  "istanbul"
+                ]
+              }
+            }
+          }
+        }],
+        include: clientInclude,
+      },
+      {
+        test: /\.tsx?$/,
+        use: [{
+          loader: 'awesome-typescript-loader',
+          options: {
+            "useCache": true,
+            "useBabel": true,
+            "babelOptions": {
+              "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
+              "plugins": [
+                "transform-runtime",
+              ],
+              "env": {
+                "coverage": {
+                  "plugins": [
+                    "istanbul"
+                  ]
+                }
+              }
+            }
+          },
+        }],
         include: clientInclude,
       },
     ],

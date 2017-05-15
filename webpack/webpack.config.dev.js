@@ -1,6 +1,6 @@
 import path from 'path'
 import webpack from 'webpack'
-import HappyPack from 'happypack'
+import {CheckerPlugin} from 'awesome-typescript-loader'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
@@ -21,12 +21,15 @@ const meteorConfig = {
 
 const config = {
   context: root,
-  devtool: 'eval-source-map',
+  devtool: 'inline-source-map',
   entry: [
-    './src/client/index.js',
+    './src/client/index.tsx',
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',
   ],
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
+  },
   output: {
     // https://github.com/webpack/webpack/issues/1752
     filename: 'app.js',
@@ -47,33 +50,13 @@ const config = {
       'process.env.TARGET': JSON.stringify(process.env.TARGET),
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
-    new HappyPack({
-      loaders: [{
-        path: 'babel-loader',
-        options: {
-          "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
-          "sourceMap": "inline",
-          "plugins": [
-            "transform-runtime",
-            "react-hot-loader/babel",
-          ],
-          "env": {
-            "coverage": {
-              "plugins": [
-                "istanbul"
-              ]
-            }
-          }
-        }
-      }],
-      threads: 4,
-    }),
     new webpack.LoaderOptionsPlugin({
       options: {
         postcss: [cssModulesValues]
       }
     }),
     new MeteorImportsPlugin(meteorConfig),
+    new CheckerPlugin(),
   ],
   module: {
     rules: [
@@ -114,7 +97,50 @@ const config = {
       },
       {
         test: /\.js$/,
-        loader: 'happypack/loader',
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
+            "sourceMap": "inline",
+            "plugins": [
+              "transform-runtime",
+              "react-hot-loader/babel",
+            ],
+            "env": {
+              "coverage": {
+                "plugins": [
+                  "istanbul"
+                ]
+              }
+            }
+          }
+        }],
+        include: clientInclude,
+      },
+      {
+        test: /\.tsx?$/,
+        use: [{
+          loader: 'awesome-typescript-loader',
+          options: {
+            "useCache": true,
+            "useBabel": true,
+            "babelOptions": {
+              "presets": [["es2015", {loose: true, modules: false}], "stage-1", "react"],
+              "sourceMap": "inline",
+              "plugins": [
+                "transform-runtime",
+                "react-hot-loader/babel",
+              ],
+              "env": {
+                "coverage": {
+                  "plugins": [
+                    "istanbul"
+                  ]
+                }
+              }
+            }
+          },
+        }],
         include: clientInclude,
       },
     ],
