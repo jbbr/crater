@@ -9,8 +9,6 @@ import Root from './Root'
 
 if (process.env.NODE_ENV !== 'production') require('es6-promise').polyfill()
 
-console.log('LOAD index.tsx', React)
-
 Meteor.startup(() => {
   const { router } = window['__INITIAL_STATE__']
 
@@ -20,24 +18,23 @@ Meteor.startup(() => {
   })
 
   const store = makeStore(initialState)
-  render(
-    <AppContainer key={0}>
-      <Root store={store} />
-    </AppContainer>,
-    document.getElementById('root')
+
+
+  const withHot = (NewRoot: typeof Root) => (
+    <AppContainer>
+      <NewRoot store={store} />
+    </AppContainer>
   )
+
+  render(withHot(Root), document.getElementById('root'))
 
   let reloads = 0
 
   // Hot Module Replacement API
   if (module['hot']) {
-    module['hot'].accept('./Root', () => {
-      const Root = require('./Root').default
-      render(
-        <AppContainer key={++reloads}>
-          <Root store={store} />
-        </AppContainer>,
-        document.getElementById('root')
+    module['hot'].accept('./Root', async () => {
+      const NewRoot = await System.import<typeof Root>('./Root').then(m => m['default'])
+      render(withHot(NewRoot), document.getElementById('root')
       )
     })
   }

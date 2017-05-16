@@ -4,8 +4,6 @@ if (process.env.USE_DOTENV) require('dotenv').config()
 
 global['__PRODUCTION__'] = process.env.NODE_ENV === 'production'
 
-console.log('RUNNING INDEX:JS')
-
 const path = require('path')
 
 const buildDir = process.env.NODE_ENV === 'production' ? __dirname : require('../buildDir')
@@ -27,9 +25,8 @@ if (process.env.NODE_ENV !== 'production') require('babel-register')
 // eslint-disable-next-line no-undef
 Package['meteor'].Meteor.startup(() => {
   if (process.env.NODE_ENV === 'production') {
-    require('../build/prerender')
+    require('./prerender')
   } else {
-    console.log('Pre require of server index - environment? should be meteor here?', cwd)
     require('../build/src/server/index')
   }
 })

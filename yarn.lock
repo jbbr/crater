@@ -42,6 +42,10 @@
   version "3.6.31"
   resolved "https://registry.yarnpkg.com/@types/redux/-/redux-3.6.31.tgz#40eafa7575db36b912ce0059b85de98c205b0708"
 
+"@types/systemjs@^0.20.2":
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/@types/systemjs/-/systemjs-0.20.2.tgz#52c5289a2834781660bc66e796bac6e05b7b048a"
+
 Base64@~0.2.0:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/Base64/-/Base64-0.2.1.tgz#ba3a4230708e186705065e66babdd4c35cf60028"

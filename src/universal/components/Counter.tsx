@@ -4,10 +4,7 @@ import {Meteor} from 'meteor/meteor'
 
 import Counts from '../collections/Counts'
 
-console.log('LOAD counter.tsx', React)
-
 const Counter = ({value, isLoading}) => {
-  console.log('Running counter with', value, isLoading)
   if (isLoading) return <span>Loading...</span>
 
   return (

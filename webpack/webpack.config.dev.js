@@ -1,6 +1,6 @@
 import path from 'path'
 import webpack from 'webpack'
-import {CheckerPlugin} from 'awesome-typescript-loader'
+import {CheckerPlugin, TsConfigPathsPlugin} from 'awesome-typescript-loader'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import MeteorImportsPlugin from 'meteor-imports-webpack-plugin'
 import cssModulesValues from 'postcss-modules-values'
@@ -28,7 +28,10 @@ const config = {
     'webpack-hot-middleware/client',
   ],
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx']
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    plugins: [
+      new TsConfigPathsPlugin(/* { tsconfig, compiler } */),
+    ],
   },
   output: {
     // https://github.com/webpack/webpack/issues/1752
